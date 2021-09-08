@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>toDoList</title>
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+  </head>
+  <body>
+    <div id="wrap">
+      <header>
+        <section>
+          <form action="" id="form" v-on:submit.prevent>
+            <label for="value" id="input">ToDoList</label>
+            <input
+              type="text"
+              id="input"
+              v-model="init"
+              @keyup.enter="add"
+              placeholder="添加ToDoList"
+            />
+          </form>
+        </section>
+      </header>
+      <div id="main">
+        <div class="content">
+          <div class="conduct">
+            <div class="title">
+              <h2>正在进行</h2>
+              <div class="count">{{conductPlus}}</div>
+            </div>
+            <ul>
+              <li v-for="(item,index) in conductArr" v-bind:key="item.id">
+                <input
+                  type="checkbox"
+                  @change="conduct(index)"
+                  v-bind:checked="item.stute"
+                />
+                <div class="con">{{item.value}}</div>
+                <div class="remove" v-on:click="remove(index)">
+                  <a href="#"><span></span></a>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="complete">
+            <div class="title">
+              <h2>已经完成</h2>
+              <div class="count">{{completeCount}}</div>
+            </div>
+            <ul>
+                <li v-for="(item,index) in completeArr" v-bind:key="item.id">
+                  <input
+                    type="checkbox"
+                    @change="complete(index)"
+                    v-bind:checked="item.stute"
+                  />
+                  <div class="con">{{item.value}}</div>
+                  <div class="remove" v-on:click="remove(index)">
+                    <a href="#"><span></span></a>
+                  </div>
+                </li>
+              </ul>
+          </div>
+        </div>
+      </div>
+      <div id="footer">
+        <p>Copyright © 2014 todolist.cn</p>
+        <a href="#">clear</a>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      const vm = new Vue({
+        el: '#wrap',
+        data: {
+          init: '',
+          conductArr: [],
+          completeArr: [],
+        },
+        computed: {
+          conductPlus() {
+            return this.conductArr.length; // 未完成数量
+          },
+          completeCount() {
+            return this.completeArr.length; // 完成数量
+          }
+        },
+        methods: {
+          add() {
+            this.conductArr.push({
+              stute: 0,
+              value: this.init,
+              id: +new Date(),
+            })
+          },
+          conduct(index) {
+            this.conductArr[index].stute = 1
+            this.completeArr.push(this.conductArr[index])
+            this.conductArr.splice(index, 1)
+          },
+          remove(index) {
+            this.conductArr.splice(index, 1);
+            this.completeArr.splice(index, 1);
+          },
+
+          complete(index) {
+            this.completeArr[index].stute = 0;
+            this.conductArr.push(this.completeArr[index]);
+            this.completeArr.splice(index, 1);
+          },
+        },
+      })
+    </script>
+  </body>
+</html>
