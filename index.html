@@ -10,6 +10,7 @@
   </head>
   <body>
     <div id="wrap">
+      <!-- 头部 -->
       <header>
         <section>
           <form action="" id="form" v-on:submit.prevent>
@@ -24,48 +25,73 @@
           </form>
         </section>
       </header>
+      <!-- 版心内容 -->
       <div id="main">
         <div class="content">
+          <!-- 正在进行 -->
           <div class="conduct">
+            <!-- 正在进行标题 -->
             <div class="title">
               <h2>正在进行</h2>
+              <!-- 正在进行数量 -->
               <div class="count">{{conductPlus}}</div>
             </div>
+            <!-- 正在进行列表 -->
             <ul>
+              <!-- 循环动态生成 li -->
               <li v-for="(item,index) in conductArr" v-bind:key="item.id">
+                <!-- 复选框  v-bind在一般特性上的使用：如id,src,disabled,checked,selected,name-->
                 <input
                   type="checkbox"
                   @change="conduct(index)"
-                  v-bind:checked="item.stute"
+                  v-bind:checked="item.select"
+                  id="checkbox"
                 />
+                <!-- 正在进行列表内容 -->
                 <div class="con">{{item.value}}</div>
+                <!-- 删除按钮 -->
                 <div class="remove" v-on:click="remove(index)">
                   <a href="#"><span></span></a>
                 </div>
               </li>
             </ul>
           </div>
+          <!-- 已完成 -->
           <div class="complete">
+            <!-- 已完成标题 -->
             <div class="title">
+              <!-- 已完成数量 -->
               <h2>已经完成</h2>
+              <!-- 已完成数量 -->
               <div class="count">{{completeCount}}</div>
             </div>
+            <!-- 正在进行列表 -->
             <ul>
-                <li v-for="(item,index) in completeArr" v-bind:key="item.id">
-                  <input
-                    type="checkbox"
-                    @change="complete(index)"
-                    v-bind:checked="item.stute"
-                  />
-                  <div class="con">{{item.value}}</div>
-                  <div class="remove" v-on:click="remove(index)">
-                    <a href="#"><span></span></a>
-                  </div>
-                </li>
-              </ul>
+              <!-- 循环动态生成 li -->
+              <li
+                v-for="(item,index) in completeArr"
+                v-bind:key="item.id"
+                v-bind:style="'backgroundColor: #e6e6e6;'"
+              >
+                <!-- 复选框 -->
+                <input
+                  type="checkbox"
+                  @change="complete(index)"
+                  v-bind:checked="item.select"
+                  id="checkbox"
+                />
+                <!-- 已完成列表内容 -->
+                <div class="con">{{item.value}}</div>
+                <!-- 删除按钮 -->
+                <div class="remove" v-on:click="remove(index)">
+                  <a href="#"><span></span></a>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
+      <!-- 页脚 -->
       <div id="footer">
         <p>Copyright © 2014 todolist.cn</p>
         <a href="#">clear</a>
@@ -73,43 +99,51 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
+      // new 一个 vue实例对象
       const vm = new Vue({
         el: '#wrap',
         data: {
           init: '',
-          conductArr: [],
-          completeArr: [],
+          conductArr: [], // 正在进行
+          completeArr: [], //  已完成
         },
+        // computed 计算属性可用于快速计算视图（View）中显示的属性这些计算将被缓存，并且只在需要时更新。
         computed: {
+          // 正在进行项数量
           conductPlus() {
-            return this.conductArr.length; // 未完成数量
+            return this.conductArr.length // 正在进行数量
           },
+          // 已完成项数量
           completeCount() {
-            return this.completeArr.length; // 完成数量
-          }
+            return this.completeArr.length // 完成数量
+          },
         },
         methods: {
+          // 添加内容
           add() {
-            this.conductArr.push({
-              stute: 0,
-              value: this.init,
+            this.conductArr.unshift({
+              select: false, // 表示当前选中状态
+              value: this.init, // 获取到 input 输入的值
               id: +new Date(),
             })
           },
+          // 进行项
           conduct(index) {
-            this.conductArr[index].stute = 1
-            this.completeArr.push(this.conductArr[index])
-            this.conductArr.splice(index, 1)
+            this.conductArr[index].select = true // 选中状态
+            this.completeArr.unshift(this.conductArr[index]) // 更具指定列表内容数组索引插入到 完成项
+            this.conductArr.splice(index, 1) // 更具数组索引截取删除指定列表内容
           },
+          // 删除项
           remove(index) {
-            this.conductArr.splice(index, 1);
-            this.completeArr.splice(index, 1);
+            this.conductArr.splice(index, 1) // 截取删除 进行项列表内容
+            this.completeArr.splice(index, 1) // 截取删除 完成项列表内容
           },
 
+          // 完成项
           complete(index) {
-            this.completeArr[index].stute = 0;
-            this.conductArr.push(this.completeArr[index]);
-            this.completeArr.splice(index, 1);
+            this.completeArr[index].select = false // 选中状态
+            this.conductArr.push(this.completeArr[index]) // 更具指定列表内容数组索引插入到 进行项
+            this.completeArr.splice(index, 1) // 更具数组索引截取删除指定列表内容
           },
         },
       })
