@@ -14,7 +14,7 @@
       <header>
         <section>
           <form action="" id="form" v-on:submit.prevent>
-            <label for="value" id="input">ToDoList</label>
+            <label for="input">ToDoList</label>
             <input
               type="text"
               id="input"
@@ -51,7 +51,7 @@
                 <!-- 正在进行列表内容 -->
                 <div class="con">{{item.value}}</div>
                 <!-- 删除按钮 -->
-                <div class="remove" v-on:click="remove(index)">
+                <div class="remove" v-on:click="removeConductArr(index)">
                   <a href="#"><span></span></a>
                 </div>
               </li>
@@ -72,7 +72,7 @@
               <li
                 v-for="(item,index) in completeArr"
                 v-bind:key="item.id"
-                v-bind:style="'backgroundColor: #e6e6e6;'"
+                v-bind:style="'backgroundColor: #e6e6e6; borderColor:#b3b3b3;'"
               >
                 <!-- 复选框 -->
                 <input
@@ -84,7 +84,7 @@
                 <!-- 已完成列表内容 -->
                 <div class="con">{{item.value}}</div>
                 <!-- 删除按钮 -->
-                <div class="remove" v-on:click="remove(index)">
+                <div class="remove" v-on:click="removeCompleteArr(index)">
                   <a href="#"><span></span></a>
                 </div>
               </li>
@@ -136,9 +136,12 @@
             this.completeArr.unshift(this.conductArr[index]) // 更具指定列表内容数组索引插入到 完成项
             this.conductArr.splice(index, 1) // 更具数组索引截取删除指定列表内容
           },
-          // 删除项
-          remove(index) {
+          // 删除项 正在进行
+          removeConductArr(index) {
             this.conductArr.splice(index, 1) // 截取删除 进行项列表内容
+          },
+          // 删除项 已完成
+          removeCompleteArr(index) {
             this.completeArr.splice(index, 1) // 截取删除 完成项列表内容
           },
           // 完成项
