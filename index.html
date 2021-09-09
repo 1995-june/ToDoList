@@ -18,6 +18,7 @@
             <input
               type="text"
               id="input"
+              name="text"
               v-model="init"
               @keyup.enter="add"
               placeholder="添加ToDoList"
@@ -94,7 +95,8 @@
       <!-- 页脚 -->
       <div id="footer">
         <p>Copyright © 2014 todolist.cn</p>
-        <a href="#">clear</a>
+        <!-- 页脚清空所有内容 -->
+        <a href="#" @click.stop="clearCon()">clear</a>
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -126,6 +128,7 @@
               value: this.init, // 获取到 input 输入的值
               id: +new Date(),
             })
+            this.init = ''
           },
           // 进行项
           conduct(index) {
@@ -138,12 +141,16 @@
             this.conductArr.splice(index, 1) // 截取删除 进行项列表内容
             this.completeArr.splice(index, 1) // 截取删除 完成项列表内容
           },
-
           // 完成项
           complete(index) {
             this.completeArr[index].select = false // 选中状态
             this.conductArr.push(this.completeArr[index]) // 更具指定列表内容数组索引插入到 进行项
             this.completeArr.splice(index, 1) // 更具数组索引截取删除指定列表内容
+          },
+          // 页脚 clear 清空所有内容
+          clearCon() {
+            this.conductArr.splice(0, this.conductArr.length)
+            this.completeArr.splice(0, this.completeArr.length)
           },
         },
       })
